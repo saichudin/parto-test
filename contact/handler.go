@@ -22,11 +22,7 @@ func GetDetailContact(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	contact, err := GetDetailContactRepo(id)
 	if err != nil {
-		resp := helper.DefaultResponse{
-			Message: err.Error(),
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		helper.ShowErrMessage(c, err)
 		return
 	}
 
@@ -41,21 +37,15 @@ func AddContact(c *gin.Context) {
 	var contact Contact
 	errBind := c.ShouldBindJSON(&contact)
 	if errBind != nil {
-		resp := helper.DefaultResponse{
-			Message: "Error validation, name and phone is required",
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message" : "Error validation, name and phone is required",
+		})
 		return
 	}
 
 	err := AddContactRepo(&contact)
 	if err != nil {
-		resp := helper.DefaultResponse{
-			Message: err.Error(),
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		helper.ShowErrMessage(c, err)
 		return
 	}
 
@@ -70,22 +60,16 @@ func UpdateContact(c *gin.Context) {
 	var contact Contact
 	errBind := c.ShouldBindJSON(&contact)
 	if errBind != nil {
-		resp := helper.DefaultResponse{
-			Message: "Error validation, name and phone is required",
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message" : "Error validation, name and phone is required",
+		})
 		return
 	}
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	err := UpdateContactRepo(id, &contact)
 	if err != nil {
-		resp := helper.DefaultResponse{
-			Message: err.Error(),
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		helper.ShowErrMessage(c, err)
 		return
 	}
 
@@ -101,11 +85,7 @@ func DeleteContact(c *gin.Context) {
 
 	err := DeleteContactRepo(id)
 	if err != nil {
-		resp := helper.DefaultResponse{
-			Message: err.Error(),
-			Data:    nil,
-		}
-		c.JSON(http.StatusBadRequest, &resp)
+		helper.ShowErrMessage(c, err)
 		return
 	}
 
